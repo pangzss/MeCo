@@ -5,6 +5,7 @@
     <img src="https://img.shields.io/badge/arXiv-2503.09027-b31b1b.svg" alt="arXiv">
   </a>
 </p>
+
 This repository maintains the official implementation of the paper **Measure Twice, Cut Once: Grasping Video Structures and Event Semantics with LLMs for Video Temporal Localization**
 
 ## 📋 To-Do List
