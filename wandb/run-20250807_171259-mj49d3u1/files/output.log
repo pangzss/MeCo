@@ -1,0 +1,99 @@
+  0%|                                                                                                                                                  | 0/5118 [00:00<?, ?it/s]/data/pangzs/miniconda3/envs/etchat/lib/python3.10/site-packages/torch/utils/checkpoint.py:429: UserWarning: torch.utils.checkpoint: please pass in use_reentrant=True or use_reentrant=False explicitly. The default value of use_reentrant will be updated to be False in the future. To maintain current behavior, pass use_reentrant=True. It is recommended that you use use_reentrant=False. Refer to docs for more details on the differences between the two variants.
+  warnings.warn(
+You are not running the flash-attention implementation, expect numerical differences.
+  0%|▏                                                                                                                                      | 7/5118 [01:18<15:30:48, 10.93s/it]Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x15072fd25630>
+{'loss': 8.6762, 'grad_norm': 0.0, 'learning_rate': 0.0, 'epoch': 0.0}
+{'loss': 8.8287, 'grad_norm': 0.0, 'learning_rate': 0.0, 'epoch': 0.0}
+{'loss': 8.324, 'grad_norm': 0.0, 'learning_rate': 0.0, 'epoch': 0.0}
+{'loss': 8.6003, 'grad_norm': 0.0, 'learning_rate': 0.0, 'epoch': 0.0}
+{'loss': 8.6476, 'grad_norm': 7.239492893218994, 'learning_rate': 1.298701298701299e-07, 'epoch': 0.0}
+{'loss': 9.3324, 'grad_norm': 7.134683609008789, 'learning_rate': 2.597402597402598e-07, 'epoch': 0.0}
+{'loss': 8.6679, 'grad_norm': 5.609560489654541, 'learning_rate': 3.896103896103896e-07, 'epoch': 0.0}
+Traceback (most recent call last):
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 1478, in __del__
+    self._shutdown_workers()
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 1423, in _shutdown_workers
+    self._worker_result_queue.put((None, None))
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/multiprocessing/queues.py", line 94, in put
+    self._start_thread()
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/multiprocessing/queues.py", line 177, in _start_thread
+    self._thread.start()
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/threading.py", line 940, in start
+    self._started.wait()
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/threading.py", line 607, in wait
+    signaled = self._cond.wait(timeout)
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/threading.py", line 320, in wait
+    waiter.acquire()
+KeyboardInterrupt:
+Traceback (most recent call last):
+  File "/home1/pangzs/workdir/MeCo/meco/train/train.py", line 712, in <module>
+    train()
+  File "/home1/pangzs/workdir/MeCo/meco/train/train.py", line 705, in train
+    trainer.train(resume_from_checkpoint=has_ckpt)
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/site-packages/transformers/trainer.py", line 1938, in train
+    return inner_training_loop(
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/site-packages/transformers/trainer.py", line 2278, in _inner_training_loop
+    tr_loss_step = self.training_step(model, inputs)
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/site-packages/transformers/trainer.py", line 3317, in training_step
+    loss = self.compute_loss(model, inputs)
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/site-packages/transformers/trainer.py", line 3362, in compute_loss
+    outputs = model(**inputs)
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/site-packages/deepspeed/utils/nvtx.py", line 18, in wrapped_fn
+    ret_val = func(*args, **kwargs)
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/site-packages/deepspeed/runtime/engine.py", line 1890, in forward
+    loss = self.module(*inputs, **kwargs)
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/site-packages/peft/peft_model.py", line 1577, in forward
+    return self.base_model(
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/site-packages/peft/tuners/tuners_utils.py", line 188, in forward
+    return self.model.forward(*args, **kwargs)
+  File "/home1/pangzs/workdir/MeCo/meco/model/meco_arch.py", line 479, in forward
+    log['train/ar_loss'] = outputs.loss.item()
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/home1/pangzs/workdir/MeCo/meco/train/train.py", line 712, in <module>
+    train()
+  File "/home1/pangzs/workdir/MeCo/meco/train/train.py", line 705, in train
+    trainer.train(resume_from_checkpoint=has_ckpt)
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/site-packages/transformers/trainer.py", line 1938, in train
+    return inner_training_loop(
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/site-packages/transformers/trainer.py", line 2278, in _inner_training_loop
+    tr_loss_step = self.training_step(model, inputs)
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/site-packages/transformers/trainer.py", line 3317, in training_step
+    loss = self.compute_loss(model, inputs)
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/site-packages/transformers/trainer.py", line 3362, in compute_loss
+    outputs = model(**inputs)
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/site-packages/deepspeed/utils/nvtx.py", line 18, in wrapped_fn
+    ret_val = func(*args, **kwargs)
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/site-packages/deepspeed/runtime/engine.py", line 1890, in forward
+    loss = self.module(*inputs, **kwargs)
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/site-packages/peft/peft_model.py", line 1577, in forward
+    return self.base_model(
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/data/pangzs/miniconda3/envs/etchat/lib/python3.10/site-packages/peft/tuners/tuners_utils.py", line 188, in forward
+    return self.model.forward(*args, **kwargs)
+  File "/home1/pangzs/workdir/MeCo/meco/model/meco_arch.py", line 479, in forward
+    log['train/ar_loss'] = outputs.loss.item()
+KeyboardInterrupt

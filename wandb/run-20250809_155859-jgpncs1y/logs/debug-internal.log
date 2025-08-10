@@ -1,0 +1,20 @@
+{"time":"2025-08-09T15:58:59.651980804+09:00","level":"INFO","msg":"using version","core version":"0.19.0"}
+{"time":"2025-08-09T15:58:59.652015774+09:00","level":"INFO","msg":"created symlink","path":"/home1/pangzs/workdir/MeCo/wandb/run-20250809_155859-jgpncs1y/logs/debug-core.log"}
+{"time":"2025-08-09T15:58:59.768255509+09:00","level":"INFO","msg":"created new stream","id":"jgpncs1y"}
+{"time":"2025-08-09T15:58:59.76832706+09:00","level":"INFO","msg":"stream: started","id":"jgpncs1y"}
+{"time":"2025-08-09T15:58:59.768405611+09:00","level":"INFO","msg":"writer: Do: started","stream_id":"jgpncs1y"}
+{"time":"2025-08-09T15:58:59.768425421+09:00","level":"INFO","msg":"sender: started","stream_id":"jgpncs1y"}
+{"time":"2025-08-09T15:58:59.768487702+09:00","level":"INFO","msg":"handler: started","stream_id":"jgpncs1y"}
+{"time":"2025-08-09T15:59:00.127582626+09:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-08-09T15:59:00.141165889+09:00","level":"ERROR","msg":"git repo not found","error":"repository does not exist"}
+{"time":"2025-08-09T18:19:56.777629351+09:00","level":"INFO","msg":"api: retrying error","error":"Post \"https://api.wandb.ai/files/pangzss/huggingface/jgpncs1y/file_stream\": dial tcp 35.186.228.49:443: connect: connection timed out"}
+{"time":"2025-08-09T19:06:26.153224008+09:00","level":"INFO","msg":"api: retrying error","error":"Post \"https://api.wandb.ai/files/pangzss/huggingface/jgpncs1y/file_stream\": dial tcp 35.186.228.49:443: connect: connection timed out"}
+{"time":"2025-08-10T06:31:39.753186562+09:00","level":"INFO","msg":"api: retrying error","error":"Post \"https://api.wandb.ai/files/pangzss/huggingface/jgpncs1y/file_stream\": dial tcp 35.186.228.49:443: connect: connection timed out"}
+{"time":"2025-08-10T06:54:53.836716844+09:00","level":"INFO","msg":"stream: closing","id":"jgpncs1y"}
+{"time":"2025-08-10T06:54:53.836871306+09:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-08-10T06:54:53.838193334+09:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-08-10T06:54:55.304708853+09:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-08-10T06:54:55.541499413+09:00","level":"INFO","msg":"handler: closed","stream_id":"jgpncs1y"}
+{"time":"2025-08-10T06:54:55.541558413+09:00","level":"INFO","msg":"sender: closed","stream_id":"jgpncs1y"}
+{"time":"2025-08-10T06:54:55.541539943+09:00","level":"INFO","msg":"writer: Close: closed","stream_id":"jgpncs1y"}
+{"time":"2025-08-10T06:54:55.546757181+09:00","level":"INFO","msg":"stream: closed","id":"jgpncs1y"}
