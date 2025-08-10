@@ -1,9 +1,0 @@
-{"time":"2025-08-07T17:06:06.697085829+09:00","level":"INFO","msg":"using version","core version":"0.19.0"}
-{"time":"2025-08-07T17:06:06.697117879+09:00","level":"INFO","msg":"created symlink","path":"/home1/pangzs/workdir/MeCo/wandb/run-20250807_170606-zow14dcr/logs/debug-core.log"}
-{"time":"2025-08-07T17:06:06.913339273+09:00","level":"INFO","msg":"created new stream","id":"zow14dcr"}
-{"time":"2025-08-07T17:06:06.913408424+09:00","level":"INFO","msg":"stream: started","id":"zow14dcr"}
-{"time":"2025-08-07T17:06:06.913448394+09:00","level":"INFO","msg":"writer: Do: started","stream_id":"zow14dcr"}
-{"time":"2025-08-07T17:06:06.913529775+09:00","level":"INFO","msg":"handler: started","stream_id":"zow14dcr"}
-{"time":"2025-08-07T17:06:06.913538985+09:00","level":"INFO","msg":"sender: started","stream_id":"zow14dcr"}
-{"time":"2025-08-07T17:06:07.317098493+09:00","level":"INFO","msg":"Starting system monitor"}
-{"time":"2025-08-07T17:06:07.334885202+09:00","level":"ERROR","msg":"git repo not found","error":"repository does not exist"}
