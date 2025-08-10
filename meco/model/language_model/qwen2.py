@@ -35,7 +35,7 @@ class MeCoQwen2ForCausalLM(MeCoMetaForCausalLM, Qwen2ForCausalLM):
             if config.use_mha:
                 self.frm_head = FrameHeadQwen2(config, layer_idx=-1)
             else: 
-                nn.Sequential(
+                self.frm_head = nn.Sequential(
                     nn.LayerNorm(hidden_size), nn.Linear(hidden_size, hidden_size // 2), nn.GELU(),
                     nn.Linear(hidden_size // 2, hidden_size))
 
