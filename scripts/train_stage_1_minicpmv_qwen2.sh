@@ -25,7 +25,6 @@ torchrun --nproc_per_node 4 meco/train/train.py \
     --video_path data/webvid/videos \
     --fps 1 \
     --tuning_mode projector \
-    --use_matching False \
     --use_time_tag False \
     --bi_attention False \
     --alpha 2.0 \

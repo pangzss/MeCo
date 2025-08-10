@@ -28,7 +28,6 @@ torchrun --nproc_per_node 4 meco/train/train.py \
     --lora_enable True \
     --lora_lr 2e-4 \
     --tuning_mode qformer \
-    --use_matching False \
     --use_time_tag False \
     --bi_attention False \
     --alpha 2.0 \

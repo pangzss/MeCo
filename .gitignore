@@ -7,3 +7,4 @@ __pycache__/
 wandb/
 scripts/train_stage_3_phi3_test.sh
 scripts/inference_etbench_test.sh
+scripts/train_stage_3_minicpmv_qwen2_test.sh

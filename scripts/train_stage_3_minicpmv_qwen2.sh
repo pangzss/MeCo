@@ -23,7 +23,6 @@ python -m torch.distributed.run --nproc_per_node 4 meco/train/train.py \
     --lora_enable True \
     --lora_lr 5e-5 \
     --tuning_mode attention \
-    --use_matching True \
     --use_time_tag False \
     --bi_attention True \
     --alpha 2.0 \
