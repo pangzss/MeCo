@@ -48,7 +48,7 @@ pip install -r requirements.txt
 
 ## 🚀 Getting Started
 
-Following [ETChat](https://github.com/PolyU-ChenLab/ETBench/tree/main), we apply a three-stage training recipe for MeCo, where the first stage is for modality alignment, the second stage is for acquiring general chatting abilities, and the third stage is for enhancing time-sensitive entity comprehension abilities.
+Following [ETChat](https://github.com/PolyU-ChenLab/ETBench/tree/main), we apply a three-stage training recipe for MeCo, where the first stage is for modality alignment, the second stage is for acquiring general chatting abilities, and the third stage is for enabling temporal localization capabilities.
 
 ### Prepare model checkpoints
 
@@ -64,7 +64,7 @@ If you want to start from `stage-1`, the pre-trained weights from [Phi3-Mini-4K-
 
 ### Training datasets
 
-The training data used in each stage follows a similar structure to E.T. Chat. We use the ET-Instruct-164K dataset for stage-3 training with additional entity comprehension annotations.
+The training data used in each stage follows a similar structure to E.T. Chat. We use the ET-Instruct-164K dataset for stage-3 training with additional strutural token and query-focused captioning annotations.
 
 || Video Data | Image Data | Annotations |
 |-|-|-|-|
