@@ -18,7 +18,7 @@ This repository maintains the official implementation of the paper **Measure Twi
 Please refer to the following environmental settings that we use. You may install these packages by yourself if you meet any problem during automatic installation.
 
 - CUDA 11.8
-- Python 3.12.2
+- Python 3.10
 - PyTorch 2.1.2
 - [Transformers](https://github.com/huggingface/transformers) 4.44.2
 - [DeepSpeed](https://github.com/microsoft/DeepSpeed) 0.14.5
@@ -36,13 +36,14 @@ cd MeCo
 2. Initialize conda environment.
 
 ```shell
-conda create -n meco python=3.12 -y
+conda create -n meco python=3.10 -y
 conda activate meco
 ```
 
 3. Install dependencies.
 
 ```shell
+pip install torch==2.1.2 torchvision==0.16.2 --index-url https://download.pytorch.org/whl/cu118
 pip install -r requirements.txt
 ```
 
