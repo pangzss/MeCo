@@ -1,10 +1,5 @@
-work_dirs/
-apollo/
-checkpoints/
 __pycache__/
 */__pycache__/
 **/__pycache__/
 wandb/
-scripts/train_stage_3_phi3_test.sh
-scripts/inference_etbench_test.sh
-scripts/train_stage_3_minicpmv_qwen2_test.sh
+data/

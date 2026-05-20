@@ -48,6 +48,8 @@ class ModelArguments:
     # localization
     localization: Optional[bool] = field(default=False)
     use_mha: Optional[bool] = field(default=False)
+    separate_loss: Optional[bool] = field(default=False)
+    binary_loss: Optional[bool] = field(default=False)
 
 @dataclass
 class DataArguments:
@@ -63,8 +65,6 @@ class DataArguments:
     min_num_words: Optional[int] = field(default=-1)
     max_num_words: Optional[int] = field(default=-1)
     max_retries: Optional[int] = field(default=10)
-    # tst
-    tst_max_len: Optional[int] = field(default=None)
 
 @dataclass
 class TrainingArguments(transformers.TrainingArguments):
@@ -477,11 +477,25 @@ class MultimodalDataset(Dataset):
                         windows = torch.tensor([]) 
                         tst_windows = torch.tensor([])
 
+                if self.model_args.binary_loss:
+                    gpt = anno['conversations'][-1]['value']
+                    gpt = gpt.replace('<tst>', '').replace('\n', '')
+                    sentences = gpt.split('<ent>')
+                    # gpt = sentences[0].strip() + "<ent>" * gpt.count('<ent>') + "<tst>"
+
+                    gpt = sentences[0].strip() + "<ent><tst>"
+
+                    anno['conversations'][-1]['value'] = gpt
+
                 data = preprocess(anno['conversations'], self.tokenizer, self.model_args, self.data_args, mm_type)
 
                 data["windows"] = windows
                 data["tst_windows"] = tst_windows
 
+                saliency = torch.tensor(anno["saliency"]).float() if "saliency" in anno else torch.tensor([]) # num_clips, 3
+                if len(saliency):
+                    saliency = saliency.mean(dim=1)  # num_clips
+                    saliency = saliency.repeat_interleave(2, dim=0)  # num_frames
                 break
             except Exception as e:
                 print(f'Error in loading {idx}: {e}')
@@ -496,6 +510,7 @@ class MultimodalDataset(Dataset):
         data['tgt'] = anno.get('tgt')
         data["fps"] = self.data_args.fps
         data["task"] = anno.get("task", anno["video"])
+        data["saliency"] = saliency  # num_frames
 
         timestamps = [str(t) for t in tag]
         timestamp_ids = self.tokenizer(timestamps, add_special_tokens=False, padding="longest", return_tensors="pt").input_ids # (T, L)
@@ -524,22 +539,6 @@ class MultimodalDataset(Dataset):
         boundary = boundary
         return boundary
 
-    def bind_saliency(self, num_clips, boundary):
-        fps = self.data_args.fps
-
-        boundary_ind = boundary.data * fps
-        pos_clips = []
-        for bnd in boundary_ind.tolist():
-            pos_clips += list(range(math.ceil(bnd[0]), math.ceil(bnd[1])))
-        assert len(pos_clips) > 0
-        saliency = torch.zeros(num_clips)
-        saliency[pos_clips] = 1
-
-        pos_clip = random.sample(saliency.nonzero()[:, 0].tolist(), 1)
-        pos_clip = torch.LongTensor(pos_clip)
-
-        return saliency, pos_clip 
-    
 
 class MultimodalDataCollator(object):
 
@@ -560,7 +559,7 @@ class MultimodalDataCollator(object):
 
         data['image'] = [torch.zeros(1, 3, self.size, self.size) if d['image'] is None else d['image'] for d in batch]
 
-        for key in ('query', 'tag', 'src', 'tgt', 'windows', 'tst_windows', 'fps', "task", "timestamp_ids"):
+        for key in ('query', 'tag', 'src', 'tgt', 'windows', 'tst_windows', 'fps', "task", "timestamp_ids", "saliency"):
             if any(key in d for d in batch):
                 data[key] = [d[key] for d in batch]
         return data
@@ -654,7 +653,10 @@ def train():
 
 
     for n, p in model.named_parameters():
-        if config.localization and any(k in n for k in ('embed_tokens', 'lm_head', 'frm_head', 'vid_head', "logit_scale")):
+        if config.localization and any(k in n for k in ('frm_head', 'vid_head', "logit_scale")):
+            p.requires_grad = True
+
+        if config.localization and num_tokens > 0 and any(k in n for k in ('embed_tokens', 'lm_head')):
             p.requires_grad = True
 
         if training_args.tuning_mode == 'projector':

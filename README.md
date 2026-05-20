@@ -6,11 +6,11 @@
   </a>
 </p>
 
-This repository maintains the official implementation of the paper **Measure Twice, Cut Once: Grasping Video Structures and Event Semantics with LLMs for Video Temporal Localization**
+This repository maintains the official implementation of the paper **Measure Twice, Cut Once: A Semantic-Oriented Approach to Video Temporal Localization with Video LLMs (ICLR 2026)**
 
 ## 📋 To-Do List
 - [x] Upload code
-- [ ] Upload data  
+- [x] Upload data  
 - [ ] Upload checkpoint
 
 ## 🛠️ Installation
@@ -71,7 +71,7 @@ The training data used in each stage follows a similar structure to E.T. Chat. W
 |-|-|-|-|
 | `Stage-1` | [WebVid](https://maxbain.com/webvid-dataset/) | [LCS-558K](https://huggingface.co/datasets/liuhaotian/LLaVA-Pretrain) | [llava_558k_with_webvid.json](https://huggingface.co/datasets/YanweiLi/LLaMA-VID-Data/resolve/main/llava_558k_with_webvid.json) |
 | `Stage-2` | [ActivityNet](http://activity-net.org/download.html) / [VideoChatGPT](https://mbzuaiac-my.sharepoint.com/:f:/g/personal/hanoona_bangalath_mbzuai_ac_ae/EnLRDehrr8lGqHpC5w1zZ9QBnsiVffYy5vCv8Hl14deRcg?e=Ul5DUE) | [LLaVA-1.5-Instruct](https://github.com/haotian-liu/LLaVA?tab=readme-ov-file#visual-instruction-tuning) | [llava_v1_5_mix665k_with_video_chatgpt.json](https://huggingface.co/datasets/YanweiLi/LLaMA-VID-Data/resolve/main/llava_v1_5_mix665k_with_video_chatgpt.json) |
-| `Stage-3` | [ET-Instruct-164K](https://huggingface.co/datasets/PolyU-ChenLab/ET-Instruct-164K) | - | [et_instruct_164k_meco.json](TBD) |
+| `Stage-3` | [ET-Instruct-164K](https://huggingface.co/datasets/PolyU-ChenLab/ET-Instruct-164K) | - | [et_instruct_164k_meco.json](https://huggingface.co/datasets/pangzs/MeCo) |
 
 Download the required datasets and place them in the `data` folder. It is strongly recommended to compress the videos (to `3 FPS` & `224px`) using the [script](tools/compress_videos.py) provided. After processing, make sure the files are organized in the following structure.
 

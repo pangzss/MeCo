@@ -95,6 +95,7 @@ def process_chunk(gpu_id, chunk_idx, args, anno_chunks, progress_counter, lock):
         anno[i]["tst_inds"] = tst_inds.tolist()
 
         anno[i]['vl_sims'] = vl_sims
+        anno[i]['scale'] = model.logit_scale.exp().item()
         with lock:
             progress_counter.value += 1
 

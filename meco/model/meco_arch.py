@@ -210,10 +210,6 @@ class MeCoMetaForCausalLM:
 
         img_embed = self.encode_image(image, img_cnt=img_cnt, query=query, tag=tag) # List(Tensor(1xTxd))
 
-        if hasattr(self.config, "inject_timestamp") and self.config.inject_timestamp:
-            time_marker_embeds = self.model.embed_tokens(torch.tensor(self.config.time_marker_ids).to(self.device)) # (2, D)
-            assert time_marker_embeds.shape[0] == 2
-        
         new_input_embeds = []
         
         new_labels = [] if labels is not None else None
@@ -245,8 +241,8 @@ class MeCoMetaForCausalLM:
                 self.cache_img_state = cur_img_state
                 self.model.img_token_pos[batch_idx].append([img_pos.item(), img_pos.item() + cur_img_state.shape[0]])
                 non_img_tokens = self.model.embed_tokens(cur_input_ids[:img_pos])
-                
-                if self.config.localization or self.config.inject_timestamp:
+
+                if self.config.localization:
                     if src is not None and src[batch_idx] is not None:
                         inds = torch.where(cur_input_ids[:img_pos] == self.config.match_token_id)[0]
                         if inds.shape[0] > 0: 
@@ -275,7 +271,7 @@ class MeCoMetaForCausalLM:
             if cur_input_ids.numel() > 0:
                 non_img_tokens = self.model.embed_tokens(cur_input_ids)
 
-                if self.config.localization or self.config.inject_timestamp:
+                if self.config.localization:
                     if src is not None and src[batch_idx] is not None:
                         inds = torch.where(cur_input_ids == self.config.match_token_id)[0]
                         if inds.shape[0] > 0:
@@ -361,6 +357,7 @@ class MeCoMetaForCausalLM:
                 tag=None,
                 windows=None,
                 tst_windows=None,
+                saliency=None,
                 fps=None,
                 task=None,
                 timestamp_ids=None,
@@ -390,7 +387,7 @@ class MeCoMetaForCausalLM:
         input_ids, attention_mask, inputs_embeds, labels, vision_tower_embed, img_cnt = self.prepare_multimodal_data(
             input_ids, attention_mask, past_key_values, labels, image, query, src, tag, mode, timestamp_ids)
 
-        if (self.config.localization or self.config.inject_timestamp) and image is not None and mode == 'generating':
+        if self.config.localization and image is not None and mode == 'generating':
             if input_ids.item() == self.config.match_token_id:
                 inputs_embeds = self.model.embed_tokens(input_ids)
                 inputs_embeds = inputs_embeds + self.cache_img_state[self.tgt[-1], None, None]
@@ -487,7 +484,7 @@ class MeCoMetaForCausalLM:
                 
                 scale = self.logit_scale.exp()
 
-                for i, (wins, tst_wins) in enumerate(zip(windows, tst_windows)):
+                for i, (wins, tst_wins, sal) in enumerate(zip(windows, tst_windows, saliency)):
 
                     if len(wins) == 0:
                         continue
@@ -527,9 +524,22 @@ class MeCoMetaForCausalLM:
                     wins = wins.long()
                     
                     ent_tgt = torch.zeros(len(ent_tokens), frm_tokens.size(0), device=self.device)
-                    
-                    for k, w in enumerate(wins):
-                        ent_tgt[k, w[0]: w[1] + 1] = 1 
+                    if self.config.binary_loss:
+                        for _, w in enumerate(wins):
+                            ent_tgt[0, w[0]: w[1]] = 1
+                    else:
+                        for k, w in enumerate(wins):
+                            ent_tgt[k, w[0]: w[1]] = 1
+
+                    if len(sal):
+                        if len(sal) > ent_tgt.sum():
+                            sal = sal[:int(ent_tgt.sum().item())]
+                        elif len(sal) < ent_tgt.sum():
+                            sal = torch.cat([sal, torch.ones(int(ent_tgt.sum().item()) - len(sal), device=sal.device) * sal[-1]])
+
+                        # ent_tgt[ent_tgt == 1] = (sal / sal.max()) ** 2
+                        ent_tgt[ent_tgt == 1] = sal.to(ent_tgt.dtype)
+
                     assert torch.all(ent_tgt.sum(dim=-1) != 0), ent_tgt.sum(dim=-1)
                     ent_tgt = ent_tgt / ent_tgt.sum(dim=-1, keepdim=True)
 
@@ -543,9 +553,13 @@ class MeCoMetaForCausalLM:
                         tst_wins = tst_wins.long()
 
                         tst_tgt = torch.zeros(len(tst_tokens), frm_tokens.size(0), device=self.device)
-                        
-                        for k, w in enumerate(tst_wins):
-                            tst_tgt[k, w[0]: w[1] + 1] = 1 
+
+                        if self.config.binary_loss:
+                            for _, w in enumerate(tst_wins):
+                                tst_tgt[0, w[0]: w[1] + 1] = 1
+                        else:
+                            for k, w in enumerate(tst_wins):
+                                tst_tgt[k, w[0]: w[1] + 1] = 1
 
                         tst_tgt = tst_tgt / tst_tgt.sum(dim=-1, keepdim=True)
                         tst_sim = torch.matmul(tst_tokens, frm_tokens.t()) * scale # num_match_token x num_frames

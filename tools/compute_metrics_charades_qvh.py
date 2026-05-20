@@ -17,13 +17,13 @@ import torch
 from nncore.ops import temporal_iou
 from tabulate import tabulate
 
-import sentence_transformers
+# import sentence_transformers
 from pycocoevalcap.bleu.bleu import Bleu
 from pycocoevalcap.cider.cider import Cider
 from pycocoevalcap.meteor.meteor import Meteor
 from pycocoevalcap.rouge.rouge import Rouge
 from pycocoevalcap.tokenizer.ptbtokenizer import PTBTokenizer
-from sentence_transformers.util import dot_score
+# from sentence_transformers.util import dot_score
 
 from scipy.ndimage import gaussian_filter1d
 from scipy.signal import find_peaks
@@ -35,7 +35,10 @@ def get_boundaries(sample, th, nms=True, nms_th=0.7, use_tst=True):
     if len(vl_sims) == 0:
         print("Didn't find any similarities")
         return [[0, sample["duration"], 1]], torch.ones(int(sample["duration"]))
-    
+
+    if "scale" not in sample:
+        sample["scale"] = 14.3828125
+
     vl_sims_sm = (vl_sims * sample["scale"]).softmax(dim=1)
 
     ent_inds = torch.tensor(sample["ent_inds"])
@@ -61,13 +64,22 @@ def get_boundaries(sample, th, nms=True, nms_th=0.7, use_tst=True):
             if use_tst:
                 other_score_sm = vl_sims_sm[inds != idx]
                 if len(other_score_sm) > 0:
-                    pred_binary = pred_binary & (class_score_sm >= other_score_sm.amax(dim=0))
+                    tst_pred = class_score_sm >= other_score_sm.amax(dim=0)
+                    if tst_pred.sum() > 0:
 
-                pred_binary_shifted_left = torch.roll(pred_binary, -1)
-                pred_binary_shifted_left[-1] = 0
-                pred_binary_shifted_right = torch.roll(pred_binary, 1)
-                pred_binary_shifted_right[0] = 0
-                pred_binary = pred_binary | pred_binary_shifted_left | pred_binary_shifted_right
+                        # tst_pred_left = torch.roll(tst_pred, -1)
+                        # tst_pred_left[-1] = 0
+                        # tst_pred_right = torch.roll(tst_pred, 1)
+                        # tst_pred_right[0] = 0
+                        # tst_pred = tst_pred | tst_pred_left | tst_pred_right
+
+                        pred_binary = pred_binary & tst_pred
+
+                        # pred_binary_shifted_left = torch.roll(pred_binary, -1)
+                        # pred_binary_shifted_left[-1] = 0
+                        # pred_binary_shifted_right = torch.roll(pred_binary, 1)
+                        # pred_binary_shifted_right[0] = 0
+                        # pred_binary = pred_binary | pred_binary_shifted_left | pred_binary_shifted_right
 
             preds.append(pred_binary)
 
@@ -88,7 +100,7 @@ def get_boundaries(sample, th, nms=True, nms_th=0.7, use_tst=True):
         boundary = boundary.cpu().numpy()
         boundary = np.split(boundary, np.where(np.diff(boundary) > 1)[0] + 1)
         boundary = [[b[0], b[-1]] if b[0] != b[-1] else [b[0], b[-1] + 1] for b in boundary] 
-        conf = [vl_sims_sm[class_idx, b[0]:b[1] + 1] for b in boundary]
+        conf = [vl_sims[class_idx, b[0]:b[1] + 1] for b in boundary]
         boundaries.extend(boundary)
         confidence.extend(conf)
         indices.extend([i] * len(boundary))
@@ -117,7 +129,7 @@ def get_boundaries(sample, th, nms=True, nms_th=0.7, use_tst=True):
     indices = indices[sort_idces].tolist()
 
     boundaries = boundaries.tolist()
-    return boundaries, ent_sims_sm.mean(0)
+    return boundaries, ent_sims_sm.amax(0)
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -154,7 +166,8 @@ if __name__ == '__main__':
 
     pred = dict()
     for sample in all_samples:
-        boundaries, scores = get_boundaries(sample, args.th, nms=True, nms_th=args.nms_th, use_tst="charades" in args.pred_path)
+        # boundaries, scores = get_boundaries(sample, args.th, nms=True, nms_th=args.nms_th, use_tst="charades" in args.pred_path)
+        boundaries, scores = get_boundaries(sample, args.th, nms=True, nms_th=args.nms_th, use_tst=True )
         scores = scores[:len(scores) - len(scores) % 2].reshape(-1, 2).mean(1).tolist()
 
         sample["pred_relevant_windows"] = boundaries
@@ -164,4 +177,6 @@ if __name__ == '__main__':
     for key, value in metrics["brief"].items():
         print(f"{key}: {value}")
 
-    
+    nncore.dump(metrics["brief"], nncore.join(dir_name, "result", 'metrics.json'), indent=4)
+
+
